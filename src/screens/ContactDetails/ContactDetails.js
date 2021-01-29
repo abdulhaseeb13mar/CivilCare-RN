@@ -19,10 +19,13 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {isFormValid} from './Validation';
 import NavigationRef from '../../shared/RefNavigation';
 import {setUserInfoAction} from '../../store/actions';
+import Toast from 'react-native-root-toast';
 
 const ContactDetails = (props) => {
-  const [name, setName] = useState('');
-  const [nameErrMsg, setNameErrMsg] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [firstNameErrMsg, setFirstNameErrMsg] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [lastNameErrMsg, setLastNameErrMsg] = useState('');
   const [email, setEmail] = useState('');
   const [emailErrMsg, setEmailErrMsg] = useState('');
   const [phone, setPhone] = useState('');
@@ -30,16 +33,24 @@ const ContactDetails = (props) => {
   const [address, setAddress] = useState('');
   const [addressErrMsg, setAddressErrMsg] = useState('');
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const builder = props.builderInfo;
 
   const Hire = () => {
-    const formValidResponse = isFormValid(name, email, phone, address);
+    const formValidResponse = isFormValid(
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+    );
     if (!formValidResponse.status) {
       errorMsgHandler(formValidResponse.errCategory, formValidResponse.errMsg);
     } else {
-      setShowModal(true);
+      CallApi();
       setUserInfoAction({
-        name: name,
+        firstName: firstName,
+        lastName: lastName,
         email: email,
         phone: phone,
         address: address,
@@ -47,26 +58,77 @@ const ContactDetails = (props) => {
     }
   };
 
+  const ShowToast = (msg) => {
+    Toast.show(msg, {
+      backgroundColor: colors.secondary,
+      textColor: 'white',
+      opacity: 1,
+      position: -60,
+    });
+  };
+
+  const CallApi = async () => {
+    console.log('API CALL START');
+    setLoading(true);
+    // this.setState({loading: true});
+    try {
+      const res = await fetch(
+        'https://reactnativeapps.herokuapp.com/customers',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstname: firstName,
+            lastname: lastName,
+            phonenumber: phone,
+            address: address,
+            email: email,
+            appname: 'Civil Care',
+          }),
+        },
+      );
+
+      const response = await res.json();
+      console.log(response);
+      setLoading(false);
+      response.status ? setShowModal(true) : ShowToast('Some error occurred');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const errorMsgHandler = (errCategory, errMsg) => {
     if (errCategory === 'email') {
       setEmailErrMsg(errMsg);
-      setNameErrMsg('');
+      setFirstNameErrMsg('');
+      setLastNameErrMsg('');
       setPhoneErrMsg('');
       setAddressErrMsg('');
-    } else if (errCategory === 'name') {
-      setNameErrMsg(errMsg);
+    } else if (errCategory === 'firstname') {
+      setFirstNameErrMsg(errMsg);
+      setLastNameErrMsg('');
       setEmailErrMsg('');
+      setPhoneErrMsg('');
+      setAddressErrMsg('');
+    } else if (errCategory === 'lastname') {
+      setLastNameErrMsg(errMsg);
+      setEmailErrMsg('');
+      setFirstNameErrMsg('');
       setPhoneErrMsg('');
       setAddressErrMsg('');
     } else if (errCategory === 'phone') {
       setPhoneErrMsg(errMsg);
-      setNameErrMsg('');
+      setFirstNameErrMsg('');
+      setLastNameErrMsg('');
       setEmailErrMsg('');
       setAddressErrMsg('');
     } else if (errCategory === 'address') {
       setAddressErrMsg(errMsg);
       setPhoneErrMsg('');
-      setNameErrMsg('');
+      setFirstNameErrMsg('');
+      setLastNameErrMsg('');
       setEmailErrMsg('');
     }
   };
@@ -76,7 +138,8 @@ const ContactDetails = (props) => {
     NavigationRef.Push('Home');
   };
 
-  const changeName = (t) => setName(t);
+  const changeFirstName = (t) => setFirstName(t);
+  const changeLastName = (t) => setLastName(t);
   const changeEmail = (t) => setEmail(t);
   const changePhone = (t) => setPhone(t);
   const changeAddress = (t) => setAddress(t);
@@ -102,7 +165,7 @@ const ContactDetails = (props) => {
               resizeMode="contain"
             />
             <View style={styles.DetailWrapper}>
-              <Text style={styles.DetailName}>Georgi Gyurov</Text>
+              <Text style={styles.DetailName}>{builder.buildersName}</Text>
               <Text style={styles.DetailValue}>
                 <AntDesign
                   name="star"
@@ -122,9 +185,9 @@ const ContactDetails = (props) => {
             <Text
               style={{
                 ...styles.personalInfoHeadingName,
-                color: nameErrMsg ? 'red' : colors.primary,
+                color: firstNameErrMsg ? 'red' : colors.primary,
               }}>
-              NAME <Text> {nameErrMsg}</Text>
+              FIRST NAME <Text> {firstNameErrMsg}</Text>
             </Text>
             <View style={styles.personalInfoInputWrapper}>
               <MaterialIcons
@@ -133,9 +196,30 @@ const ContactDetails = (props) => {
                 style={styles.inputIcon}
               />
               <TextInput
-                placeholder="Name"
+                placeholder="First Name"
                 style={styles.Input}
-                onChangeText={changeName}
+                onChangeText={changeFirstName}
+              />
+            </View>
+          </View>
+          <View style={styles.singlePersonalInfoWrapper}>
+            <Text
+              style={{
+                ...styles.personalInfoHeadingName,
+                color: lastNameErrMsg ? 'red' : colors.primary,
+              }}>
+              LAST NAME <Text> {lastNameErrMsg}</Text>
+            </Text>
+            <View style={styles.personalInfoInputWrapper}>
+              <MaterialIcons
+                name="person"
+                size={metrics.width * 0.07}
+                style={styles.inputIcon}
+              />
+              <TextInput
+                placeholder="Last Name"
+                style={styles.Input}
+                onChangeText={changeLastName}
               />
             </View>
           </View>
@@ -194,11 +278,16 @@ const ContactDetails = (props) => {
               <MaterialIcons
                 name="location-pin"
                 size={metrics.width * 0.07}
-                style={styles.inputIcon}
+                style={{
+                  ...styles.inputIcon,
+                  alignSelf: 'flex-start',
+                  marginTop: 10,
+                }}
               />
               <TextInput
                 placeholder="Address"
-                style={styles.Input}
+                style={{...styles.Input, height: 100, textAlignVertical: 'top'}}
+                multiline={true}
                 onChangeText={changeAddress}
               />
             </View>
@@ -206,11 +295,12 @@ const ContactDetails = (props) => {
         </View>
         <View style={styles.ConfirmButtonWrapper}>
           <Button
-            title="CONFIRM HIRE"
+            title="CONFIRM BOOKING"
             raised
             buttonStyle={styles.confirmButton}
             containerStyle={styles.confirmButtonContainer}
             onPress={Hire}
+            loading={loading}
           />
         </View>
         <Overlay
@@ -225,7 +315,7 @@ const ContactDetails = (props) => {
             />
             <Text style={styles.ModalHeadText}>THANK YOU!</Text>
             <Text style={styles.ModalSubText}>
-              Your hiring has been confirmed
+              Your booking has been confirmed
             </Text>
           </View>
         </Overlay>
@@ -279,6 +369,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginHorizontal: metrics.width * 0.035,
+    marginBottom: metrics.height * 0.02,
   },
   Input: {
     width: '93%',
@@ -293,7 +384,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: metrics.height * 0.004,
   },
   personalInfoHeadingName: {
     fontSize: scaleFont(13),
@@ -356,6 +446,7 @@ const styles = StyleSheet.create({
   DetailName: {
     fontSize: scaleFont(18),
     fontWeight: 'bold',
+    width: metrics.width * 0.35,
   },
   DetailWrapper: {
     display: 'flex',

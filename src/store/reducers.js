@@ -9,7 +9,8 @@ let currentBuider = {
 };
 
 let UserInfo = {
-  name: '',
+  firstname: '',
+  lastname: '',
   email: '',
   phone: '',
   address: '',

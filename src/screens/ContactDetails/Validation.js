@@ -1,6 +1,8 @@
-export const isFormValid = (name, email, phone, address) => {
-  return name === ''
-    ? prepareResponse(false, 'name', 'is empty')
+export const isFormValid = (firstname, lastname, email, phone, address) => {
+  return firstname === ''
+    ? prepareResponse(false, 'firstname', 'is empty')
+    : lastname === ''
+    ? prepareResponse(false, 'lastname', 'is empty')
     : email === ''
     ? prepareResponse(false, 'email', 'is Empty')
     : !email.includes('@') || !email.includes('.')

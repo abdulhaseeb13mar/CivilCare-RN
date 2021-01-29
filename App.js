@@ -6,15 +6,15 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
+import RNBootSplash from 'react-native-bootsplash';
 import {RootSiblingParent} from 'react-native-root-siblings';
 import {Provider} from 'react-redux';
 import store from './src/store/store';
 import Routes from './routes';
-import RNBootSplash from 'react-native-bootsplash';
 
 const App: () => React$Node = () => {
-  RNBootSplash.hide();
+  RNBootSplash.hide(300);
   return (
     <RootSiblingParent>
       <Provider store={store}>
