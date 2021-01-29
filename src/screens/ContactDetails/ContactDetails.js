@@ -282,7 +282,7 @@ const styles = StyleSheet.create({
   },
   Input: {
     width: '93%',
-    padding: 7,
+    height: metrics.height * 0.065,
   },
   inputIcon: {
     width: '7%',
@@ -344,6 +344,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: metrics.height * 0.01,
     backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
     elevation: 2,
   },
   DetailName: {

@@ -256,6 +256,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: '#f7f7ff',
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
     margin: metrics.width * 0.03,
   },
   BuilderTileWrapper: {
@@ -267,6 +274,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: '#f7f7ff',
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
     marginHorizontal: metrics.width * 0.06,
   },
   ratingView: {

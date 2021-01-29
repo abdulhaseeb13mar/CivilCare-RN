@@ -85,6 +85,13 @@ const styles = StyleSheet.create({
     bottom: metrics.width * 0.07,
     right: metrics.width * 0.08,
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
   },
   builderDes: {
     fontWeight: 'bold',
@@ -124,13 +131,20 @@ const styles = StyleSheet.create({
     width: metrics.width * 0.87,
     borderRadius: 10,
     elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
   },
   BuilderTileWrapper: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: metrics.width * 0.028,
-    backgroundColor: '#f7f7ff',
+    borderRadius: 15,
     marginVertical: metrics.width * 0.018,
   },
   builderTileName: {
@@ -145,6 +159,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: 'white',
     elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
   },
   suggBuilderWrapper: {
     marginHorizontal: metrics.width * 0.035,
