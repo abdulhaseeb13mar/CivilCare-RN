@@ -7,6 +7,7 @@ export const colors = {
   lightGrey1: '#d0d0d0',
   lightGrey2: '#edeef0',
   darkGray: '#666565',
+  blueGray: '#f7f7ff',
 };
 
 const width = Dimensions.get('window').width;

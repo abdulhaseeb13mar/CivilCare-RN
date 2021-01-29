@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, FlatList} from 'react-native';
 import {metrics} from '../../shared/Theme';
@@ -19,9 +20,9 @@ function Listing(props) {
         horizontal={horizontal}
         style={[{flex: 1}, containerStyle]}
         contentContainerStyle={{
-          paddingRight: metrics.defaultMargin,
+          // paddingRight: metrics.defaultMargin,
           paddingVertical: horizontal ? '2%' : 0,
-          paddingLeft: horizontal ? 0 : metrics.defaultMargin,
+          // paddingLeft: horizontal ? 0 : metrics.defaultMargin,
           ...style,
         }}
         keyExtractor={() => Math.random().toString()}

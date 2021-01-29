@@ -1,19 +1,19 @@
 import ActionTypes from './actionTypes';
 
-export const Action_1 = (any_Argument) => {
+export const setCurrentBuilderAction = (builderInfo) => {
   return async (dispatch) => {
     dispatch({
-      type: ActionTypes.ACTION_TYPE_1,
-      payload: any_Argument,
+      type: ActionTypes.SET_BUILDER_INFO,
+      payload: builderInfo,
     });
   };
 };
 
-export const Action_2 = (any_Argument) => {
+export const setUserInfoAction = (userInfo) => {
   return async (dispatch) => {
     dispatch({
-      type: ActionTypes.ACTION_TYPE_2,
-      payload: any_Argument,
+      type: ActionTypes.SET_USER_INFO,
+      payload: userInfo,
     });
   };
 };

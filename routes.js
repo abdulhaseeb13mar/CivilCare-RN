@@ -6,7 +6,8 @@ import {
 import {NavigationContainer} from '@react-navigation/native';
 import Navigator from './src/shared/RefNavigation';
 import Home from './src/screens/Home/Home';
-import Products from './src/screens/Products/Products';
+import Worker from './src/screens/Worker/Worker';
+import ContactDetails from './src/screens/ContactDetails/ContactDetails';
 
 const Stack = createStackNavigator();
 
@@ -23,7 +24,8 @@ function Routes(props) {
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Products" component={Products} />
+        <Stack.Screen name="Worker" component={Worker} />
+        <Stack.Screen name="ContactDetails" component={ContactDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

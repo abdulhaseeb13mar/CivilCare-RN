@@ -1,19 +1,25 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {Text, View, StyleSheet, ImageBackground} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import WrapperScreen from '../../components/WrapperScreen/WrapperScreen';
-import {colors, metrics, scaleFont} from '../../shared/Theme';
+import {connect} from 'react-redux';
+import {metrics, scaleFont} from '../../shared/Theme';
 import Listing from '../../components/listing/listing';
 import Data from '../../Dummydata/DummyData';
-// import FastImage from 'react-native-fast-image';
 import SearchBar from '../../components/searchBar/searchBar';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-// import NavigationRef from '../../shared/RefNavigation';
-import Builder from '../../assets/images/builder1.png';
+import NavigationRef from '../../shared/RefNavigation';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Pie from 'react-native-pie';
+import {setCurrentBuilderAction} from '../../store/actions';
 
-export default function Home(props) {
+function Home(props) {
   const [searchText, setSearchText] = useState('');
   const [Progress, setProgress] = useState([
     {houseName: 'zain\nhouse', percentage: 45},
@@ -21,24 +27,41 @@ export default function Home(props) {
     {houseName: 'haris\nhouse', percentage: 10},
   ]);
 
-  // const RenderSearchedResult = () => {
-  //   var SearchedItems = Data.subcategory.filter((item) =>
-  //     item.subcategoryname.toLowerCase().includes(searchText.toLowerCase()),
-  //   );
-  //   return RenderBanners(
-  //     SearchedItems.length == 0 ? Data.banner : SearchedItems,
-  //   );
-  // };
+  const RenderSearchedResult = () => {
+    var SearchedBuilders = Data.builders.filter((item) =>
+      item.buildersName.toLowerCase().includes(searchText.toLowerCase()),
+    );
+    return RenderSearchedBuilders(SearchedBuilders);
+  };
 
-  // const RenderBanners = (BannerArr) => {
-  //   return BannerArr.map((item) => (
-  //     <Banner
-  //       key={item.categoryid}
-  //       item={item}
-  //       subCategory={Data.subcategory}
-  //     />
-  //   ));
-  // };
+  const setCurrentBuilder = (item) => {
+    props.setCurrentBuilderAction(item);
+    NavigationRef.Navigate('Worker');
+  };
+
+  const RenderSearchedBuilders = (SearchedBuilders) => {
+    return (
+      <View style={{flex: 1}}>
+        <Listing
+          data={SearchedBuilders}
+          renderItem={({item}) => (
+            <BuilderTile
+              item={item}
+              setCurrentBuilder={setCurrentBuilder}
+              search={true}
+            />
+          )}
+          horizontal={false}
+          numColumns={2}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        />
+      </View>
+    );
+  };
 
   const changeSearchText = (t) => setSearchText(t);
   return (
@@ -47,54 +70,70 @@ export default function Home(props) {
         <View style={styles.SearchBarWrapper}>
           <SearchBar changeSearchText={changeSearchText} />
         </View>
-        <View style={styles.SubHeaderWrapper}>
-          <View
-            style={{
-              ...styles.workCubeWrapper,
-              backgroundColor: 'rgba(60,210,131,0.17)',
-            }}>
-            <Text style={{...styles.CuberFigure, color: '#3cd283'}}>27</Text>
-            <Text style={styles.cubeText}>Completed</Text>
-          </View>
-          <View
-            style={{
-              ...styles.workCubeWrapper,
-              backgroundColor: 'rgba(255,206,51,0.17)',
-            }}>
-            <Text style={{...styles.CuberFigure, color: '#ffce33'}}>5</Text>
-            <Text style={styles.cubeText}>Inprogress</Text>
-          </View>
-          <View
-            style={{
-              ...styles.workCubeWrapper,
-              backgroundColor: 'rgba(253,101,101,0.17)',
-            }}>
-            <Text style={{...styles.CuberFigure, color: '#fd6565'}}>2</Text>
-            <Text style={styles.cubeText}>Hold</Text>
-          </View>
-        </View>
-        <View style={styles.suggBuilderWrapper}>
-          <Text style={styles.suggBuilderHeader}>Suggested Builders</Text>
-        </View>
-        <View style={styles.listingWrapper}>
-          <Listing
-            data={Data.builders}
-            renderItem={({item}) => <BuilderTile item={item} />}
-          />
-        </View>
-        <View style={styles.suggBuilderWrapper}>
-          <Text style={styles.suggBuilderHeader}>Builder Progress</Text>
-        </View>
-        <View style={styles.listingWrapper}>
-          <Listing
-            data={Progress}
-            renderItem={({item}) => <ProgressTile item={item} />}
-          />
-        </View>
+        {!searchText ? (
+          <>
+            <View style={styles.SubHeaderWrapper}>
+              <View
+                style={{
+                  ...styles.workCubeWrapper,
+                  backgroundColor: 'rgba(60,210,131,0.17)',
+                }}>
+                <Text style={{...styles.CuberFigure, color: '#3cd283'}}>
+                  27
+                </Text>
+                <Text style={styles.cubeText}>Completed</Text>
+              </View>
+              <View
+                style={{
+                  ...styles.workCubeWrapper,
+                  backgroundColor: 'rgba(255,206,51,0.17)',
+                }}>
+                <Text style={{...styles.CuberFigure, color: '#ffce33'}}>5</Text>
+                <Text style={styles.cubeText}>Inprogress</Text>
+              </View>
+              <View
+                style={{
+                  ...styles.workCubeWrapper,
+                  backgroundColor: 'rgba(253,101,101,0.17)',
+                }}>
+                <Text style={{...styles.CuberFigure, color: '#fd6565'}}>2</Text>
+                <Text style={styles.cubeText}>Hold</Text>
+              </View>
+            </View>
+            <View style={styles.suggBuilderWrapper}>
+              <Text style={styles.suggBuilderHeader}>Suggested Builders</Text>
+            </View>
+            <View style={styles.listingWrapper}>
+              <Listing
+                data={Data.builders}
+                renderItem={({item}) => (
+                  <BuilderTile
+                    item={item}
+                    setCurrentBuilder={setCurrentBuilder}
+                  />
+                )}
+              />
+            </View>
+            <View style={styles.suggBuilderWrapper}>
+              <Text style={styles.suggBuilderHeader}>Builder Progress</Text>
+            </View>
+            <View style={styles.listingWrapper}>
+              <Listing
+                data={Progress}
+                renderItem={({item}) => <ProgressTile item={item} />}
+                wrapperStyle={{...styles.BuilderTileWrapper}}
+              />
+            </View>
+          </>
+        ) : (
+          RenderSearchedResult()
+        )}
       </KeyboardAwareScrollView>
     </WrapperScreen>
   );
 }
+
+export default connect(null, {setCurrentBuilderAction})(Home);
 
 const ProgressTile = ({item}) => {
   let tileColors = {
@@ -140,9 +179,13 @@ const ProgressTile = ({item}) => {
   );
 };
 
-const BuilderTile = ({item}) => {
+const BuilderTile = ({item, setCurrentBuilder, search}) => {
   return (
-    <View style={styles.BuilderTileWrapper}>
+    <TouchableOpacity
+      onPress={() => setCurrentBuilder(item)}
+      style={
+        search ? styles.SearchBuilderTileWrapper : styles.BuilderTileWrapper
+      }>
       <ImageBackground
         source={item.buiderImage}
         style={styles.builderTileImage}
@@ -153,13 +196,8 @@ const BuilderTile = ({item}) => {
         <AntDesign name="star" color="#ffce33" size={metrics.width * 0.04} />
         <Text style={styles.ratingText}>{item.rating}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
-};
-
-const border = {
-  borderColor: 'red',
-  borderWidth: 1,
 };
 
 const styles = StyleSheet.create({
@@ -208,6 +246,17 @@ const styles = StyleSheet.create({
     height: metrics.width * 0.35,
     borderRadius: 15,
     backgroundColor: 'white',
+  },
+  SearchBuilderTileWrapper: {
+    width: metrics.width * 0.42,
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    padding: metrics.width * 0.028,
+    borderRadius: 15,
+    backgroundColor: '#f7f7ff',
+    elevation: 3,
+    margin: metrics.width * 0.03,
   },
   BuilderTileWrapper: {
     width: metrics.width * 0.42,
