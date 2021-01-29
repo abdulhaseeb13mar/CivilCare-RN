@@ -1,11 +1,21 @@
 import {Dimensions, Platform, PixelRatio} from 'react-native';
 
-export const colors = {};
+export const colors = {
+  primary: '#18cb6c',
+  secondary: '#000000',
+  lightBackground: '#eeeff0',
+  lightGrey1: '#d0d0d0',
+  lightGrey2: '#edeef0',
+  darkGray: '#666565',
+};
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export const metrics = {
-  width: Dimensions.get('window').width,
-  height: Dimensions.get('window').height,
-  defaultMargin: Dimensions.get('window').width * 0.05,
+  width: width,
+  height: height,
+  defaultMargin: width * 0.05,
   smallMargin: width * 0.03,
   largeMargin: width * 0.08,
 };
